@@ -101,10 +101,3 @@ target("CleanerCS2-Xmake")
         })
     end
     set_languages("cxx17")
-
-xpack("CleanerCS2")
-    set_formats("zip")
-    add_installfiles("build/windows/x64/release/CleanerCS2-Xmake.dll", {filename = "cleanercs2.dll", prefixdir = "cleanercs2"})
-    add_installfiles("build/linux/x86_64/release/libCleanerCS2-Xmake.so", {filename = "cleanercs2.so", prefixdir = "cleanercs2"})
-    add_installfiles("package/config.cfg", {prefixdir = "cleanercs2"})
-    add_installfiles("package/cleanercs2.vdf", {prefixdir = "metamod"})

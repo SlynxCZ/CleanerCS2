@@ -1,0 +1,17 @@
+services:
+  builder:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    volumes:
+      - ../:/project
+      - nuget_cache:/root/.nuget/packages
+    working_dir: /project
+    environment:
+      HL2SDKCS2: /project/vendor/hl2sdk-cs2
+      MMSOURCE112: /project/vendor/metamod-source
+      ROOT: /project
+    entrypoint: ["/project/docker/docker-entrypoint.sh"]
+
+volumes:
+  nuget_cache:
