@@ -5,6 +5,11 @@ set -e
 export PATH="/root/.local/bin:${PATH}"
 export XMAKE_ROOT=y
 
+# Get version from git or use default
+VERSION=$(git describe --tags --long 2>/dev/null || echo "1.0-dev")
+export CLEANERCS2_VERSION="$VERSION"
+echo "Setting version to \"$CLEANERCS2_VERSION\""
+
 # Configure & build native plugin
 xmake f -y -p linux -a x86_64 --mode=release
 xmake -y

@@ -1,23 +1,4 @@
-function get_version()
-    local default_version = "1.0-dev"
-    local ok, out = pcall(function()
-        local res = os.iorun("git describe --tags --long")
-        if res then
-            return res:trim()
-        end
-        return nil
-    end)
-
-    if ok and out and #out > 0 then
-        return out
-    else
-        cprint("${yellow}git describe failed, using default version${clear}")
-        return default_version
-    end
-end
-
-local CLEANERCS2_VERSION = get_version()
-cprint("Setting version to \"%s\"", CLEANERCS2_VERSION)
+local CLEANERCS2_VERSION = os.getenv("CLEANERCS2_VERSION") or "1.0-dev"
 
 set_runtimes("MT")
 add_rules("mode.debug", "mode.release")
