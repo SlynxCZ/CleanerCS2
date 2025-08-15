@@ -1,3 +1,31 @@
+import("core.base.option")
+
+function get_version()
+    local default_version = "1.0-dev"
+    local version = default_version
+
+    local ok, out = try {
+        function ()
+            local res = os.iorun("git describe --tags --long"):trim()
+            return res
+        end,
+        catch {
+            function (err)
+                cprint("${yellow}git describe failed, no tags?${clear}")
+                return default_version
+            end
+        }
+    }
+
+    if ok and out and #out > 0 then
+        version = out
+    end
+
+    return version
+end
+local CLEANERCS2_VERSION = get_version()
+cprint("Setting version to \"%s\"", CLEANERCS2_VERSION)
+
 set_runtimes("MT")
 add_rules("mode.debug", "mode.release")
 add_requires("re2")
@@ -12,6 +40,9 @@ target("CleanerCS2-Xmake")
     add_files("src/*.cpp")
     add_packages("re2")
     set_symbols("hidden")
+
+    -- Přidáme makro s verzí
+    add_defines(string.format("CLEANERCS2_VERSION=\"%s\"", CLEANERCS2_VERSION))
 
     add_files({
         SDK_PATH.."/tier1/convar.cpp",
