@@ -1,28 +1,21 @@
-import("core.base.option")
-
 function get_version()
     local default_version = "1.0-dev"
-    local version = default_version
-
-    local ok, out = try {
-        function ()
-            local res = os.iorun("git describe --tags --long"):trim()
-            return res
-        end,
-        catch {
-            function (err)
-                cprint("${yellow}git describe failed, no tags?${clear}")
-                return default_version
-            end
-        }
-    }
+    local ok, out = pcall(function()
+        local res = os.iorun("git describe --tags --long")
+        if res then
+            return res:trim()
+        end
+        return nil
+    end)
 
     if ok and out and #out > 0 then
-        version = out
+        return out
+    else
+        cprint("${yellow}git describe failed, using default version${clear}")
+        return default_version
     end
-
-    return version
 end
+
 local CLEANERCS2_VERSION = get_version()
 cprint("Setting version to \"%s\"", CLEANERCS2_VERSION)
 
@@ -41,7 +34,6 @@ target("CleanerCS2-Xmake")
     add_packages("re2")
     set_symbols("hidden")
 
-    -- Přidáme makro s verzí
     add_defines(string.format("CLEANERCS2_VERSION=\"%s\"", CLEANERCS2_VERSION))
 
     add_files({
@@ -75,10 +67,10 @@ target("CleanerCS2-Xmake")
     })
 
     if is_plat("windows") then
-        add_links("psapi");
-        add_files("src/utils/plat_win.cpp");
+        add_links("psapi")
+        add_files("src/utils/plat_win.cpp")
     else
-        add_files("src/utils/plat_unix.cpp");
+        add_files("src/utils/plat_unix.cpp")
     end
 
     add_includedirs({
@@ -102,7 +94,7 @@ target("CleanerCS2-Xmake")
         MM_PATH.."/core/sourcehook",
     })
 
-    if(is_plat("windows")) then
+    if is_plat("windows") then
         add_defines({
             "COMPILER_MSVC",
             "COMPILER_MSVC64",
@@ -131,4 +123,5 @@ target("CleanerCS2-Xmake")
             "_vsnprintf=vsnprintf"
         })
     end
+
     set_languages("cxx17")
