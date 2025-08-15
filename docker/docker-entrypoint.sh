@@ -16,5 +16,6 @@ mkdir -p build/package/addons/cleanercs2/bin/linuxsteamrt64
 
 # Copy configs
 cp package/cleanercs2.vdf build/package/addons/metamod
+cp package/config.cfg build/package/addons/cleanercs2
 cp build/linux/x86_64/release/libCleanerCS2-Xmake.so \
    build/package/addons/cleanercs2/cleanercs2.so
